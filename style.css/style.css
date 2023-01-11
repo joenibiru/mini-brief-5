@@ -1,0 +1,10 @@
+th{
+    background-color: gray;
+    border: black solid 1px;
+}
+td{
+    border: black solid 1px;
+}
+table{
+    border-collapse: collapse;
+}
