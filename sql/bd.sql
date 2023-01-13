@@ -37,3 +37,15 @@ CREATE TABLE categorie_lien (
     FOREIGN KEY (categorie_id) REFERENCES categorie(Identifiants_categorie),
     FOREIGN KEY (lien_id) REFERENCES lien(Identifiants_lien)
 );
+INSERT INTO categorie_lien (categorie_id, lien_id)
+ VALUES 
+ (1,3), 
+ (1,5),
+ (2,1),
+ (3,6),
+ (3,7),
+ (3,8),
+ (4,2),
+ (6,4),
+ (4,9),
+ (5,10)
