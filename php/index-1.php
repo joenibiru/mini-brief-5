@@ -41,9 +41,9 @@ try {
 
  $requete = 'SELECT lien.Nom_lien, lien.URL_lien, lien.Description_lien, categorie.Nom_catégorie
  FROM lien 
- JOIN categorie_lien 
+ LEFT JOIN categorie_lien 
  ON categorie_lien.lien_id = lien.Identifiants_lien
- JOIN categorie ON categorie.Identifiants_catégorie = categorie_lien.categorie_id';
+ LEFT JOIN categorie ON categorie.Identifiants_catégorie = categorie_lien.categorie_id';
 $requetePreparee = $connexion->prepare($requete);
 $requetePreparee->execute();
 $resultats = $requetePreparee->fetchAll();

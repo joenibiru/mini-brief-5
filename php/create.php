@@ -8,7 +8,7 @@ $sql = "mysql";
 
 $connexion = new PDO('mysql:host=localhost;dbname=mini-breif5;charset=utf8', 'root', '');
 
-
+$Categorie = "";
 $Nom = "";
 $Lien = "";
 $Description = "";
@@ -17,7 +17,9 @@ $errorMessage = "";
 $successMessage = "";
 
 if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
-    
+    echo "<pre>" ;
+    var_dump($_POST) ;
+    echo "</pre>";
     $Nom = $_POST["Nom"];
     $Lien = $_POST["Lien"];
     $Description = $_POST["Description"];
@@ -29,11 +31,10 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
         }
 
         $sql = "INSERT INTO lien ( Nom_lien, URL_lien, Description_lien) " .
-                "Values ( '$Nom', '$Lien', '$Description')";
+                "Values ( '$Nom', '$Lien', '$Description')";    
         $result = $connexion->query($sql);
-
         if (!$result) {
-            $errorMessage = "Invalid query:" . $connexion->error;
+            $errorMessage = 'Invalid query:' . $connexion->error;
             break;
         }
             
@@ -44,11 +45,17 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 
         $successMessage = "ajouts effectuer";
 
-        header("location: /htdocs/index-1.php");
-        exit;
+        // header("location: index-1.php");
+        // exit;
 
     } while (false);
 }
+// création de la liste des catgéories dans le select du form
+ $query = "";
+ $query.= "SELECT * FROM categorie;";
+ $query = $connexion->prepare($query);
+ $query->execute();
+ $data = $query->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -93,7 +100,25 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
                         <input type="text" class="form-control" name="Description" value="<?php echo $Description; ?>">
                     </div>
             </div>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">Categorie</label>
+                <div class="col-sm-6">
+                    <select name="categorie">
+                        <option value=0>Sélectionner une categorie</option>
+                        <?php
+                        // On affiche chaque catégorie une à une
+                        foreach ($data as $ligne) { 
+                        ?>
+                        <option value=" <?= $ligne['Identifiants_catégorie']?>">
+                                <?= $ligne['Nom_catégorie']?>
+                        </option>
 
+                        <?php
+                        }
+                        ?>
+                    </select>
+                </div>
+            </div>
             <?php
               if ( !empty($successMessage)) {
                 echo"
