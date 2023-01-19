@@ -24,3 +24,7 @@ h1{
 h2{
     text-decoration: underline;
 }
+button{
+    color: blue;
+    background-color: greenyellow;
+}
