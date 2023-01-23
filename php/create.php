@@ -23,38 +23,31 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
     $Nom = $_POST["Nom"];
     $Lien = $_POST["Lien"];
     $Description = $_POST["Description"];
+    $IdCategorie = $_POST["categorie"];
 
-    do {
-        if ( empty($Nom) || empty($Lien ) || empty($Description)) {
-            $errorMessage = 'tous les champs doivent être remplis';
-            break;
-        }
-
-        $sql = "INSERT INTO lien ( Nom_lien, URL_lien, Description_lien) " .
-                "Values ( '$Nom', '$Lien', '$Description')";    
-        $result = $connexion->query($sql);
-        if (!$result) {
-            $errorMessage = 'Invalid query:' . $connexion->error;
-            break;
-        }
+        if ( isset($_POST["Nom"]) && isset($_POST["Lien"]) && isset($_POST["Description"])) {
             
+        }
 
-        $Nom = "";
-        $Lien = "";
-        $Description = "";
+        $sql = "INSERT INTO lien ( Nom_lien, URL_lien, Description_lien) 
+                VALUES ('$Nom', '$Lien', '$Description')";
+                $addlien = $connexion->prepare($sql);
+                $addlien->execute();
+                $IdLien = $connexion->lastInsertId();    
 
-        $successMessage = "ajouts effectuer";
+            $categorieLien = "INSERT INTO categorie_lien (categorie_id, lien_id) VALUES ('$IdCategorie', '$IdLien')";
+            $jointure = $connexion->prepare($categorieLien);
+            $jointure->execute();
+        }
 
-        // header("location: index-1.php");
-        // exit;
 
-    } while (false);
-}
+
 // création de la liste des catgéories dans le select du form
  $query = "";
  $query.= "SELECT * FROM categorie;";
  $query = $connexion->prepare($query);
  $query->execute();
+ $queryIdLien=$connexion->lastInsertId();
  $data = $query->fetchAll();
 ?>
 <!DOCTYPE html>
@@ -76,7 +69,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
             echo"
             <div class='alert alert-warning alert-dismissible fade show' role='alert'>
                  <strong>$errorMessage</strong>
-                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='close'><button>
+                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='close'></button>
             </div>
             ";
         }
@@ -125,12 +118,12 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
                 <div class='row mb-3'>
                     <div class='offset-sm-3 col-sm-6'>
                         <div class='alert alert-warning alert-dismissible fade show' role='alert'>
-                            <strong>$successMessage</strong>
-                            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='close'><button>
+                            <strong>".$successMessage."</strong>
+                            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='close'></button>
                         </div>
                     </div>
-                </div>
-                ";
+                </div> ";
+               
             }
             ?>
             <div class="row mb-3">
